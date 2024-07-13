@@ -1,28 +1,48 @@
-from flask import Flask, request, jsonify
-from flask_sqlalchemy import SQLAlchemy
+import tkinter as tk
+from tkinter import messagebox
+from flask import Flask
+from config import Config
+from models import db
+from routes import bp as api_bp
+import threading
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://admin:secret@db/inventory_db'
-db = SQLAlchemy(app)
+app.config.from_object(Config)
+db.init_app(app)
 
-class Producto(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    nombre = db.Column(db.String(50), nullable=False)
-    descripcion = db.Column(db.String(200), nullable=True)
+app.register_blueprint(api_bp, url_prefix='/api')
 
-class Usuario(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    nombre = db.Column(db.String(50), nullable=False)
-    correo = db.Column(db.String(50), nullable=False)
-
-# Crear la base de datos y las tablas
-@app.before_first_request
-def create_tables():
-    db.create_all()
 
 @app.route('/')
 def hello_world():
     return 'Hello, World!'
 
-if __name__ == '__main__':
+
+def run_flask():
     app.run(host='0.0.0.0')
+
+
+def on_button_click():
+    messagebox.showinfo("Info", "Button clicked!")
+
+
+def create_gui():
+    root = tk.Tk()
+    root.title("Inventory System")
+
+    button = tk.Button(root, text="Click Me", command=on_button_click)
+    button.pack()
+
+    root.mainloop()
+
+
+if __name__ == '__main__':
+    # Crear la base de datos y las tablas
+    with app.app_context():
+        db.create_all()
+
+    flask_thread = threading.Thread(target=run_flask)
+    flask_thread.daemon = True
+    flask_thread.start()
+
+    create_gui()
