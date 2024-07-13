@@ -1,6 +1,6 @@
 from flask import request, jsonify
-from . import bp
-from ..models import db, Usuario
+from routes import bp
+from models import db, Usuario
 
 @bp.route('/usuarios', methods=['POST'])
 def add_usuario():

@@ -1,6 +1,6 @@
 from flask import request, jsonify
-from . import bp
-from ..models import db, Producto
+from routes import bp
+from models import db, Producto
 
 @bp.route('/productos', methods=['POST'])
 def add_producto():

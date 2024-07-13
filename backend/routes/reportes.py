@@ -1,6 +1,6 @@
 from flask import jsonify
-from . import bp
-from ..models import db, DetallePedido, Producto
+from routes import bp
+from models import db, DetallePedido, Producto
 
 @bp.route('/reportes/stock', methods=['GET'])
 def generar_reporte_stock():

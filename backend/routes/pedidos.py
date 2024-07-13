@@ -1,6 +1,6 @@
 from flask import request, jsonify
-from . import bp
-from ..models import db, Pedido, DetallePedido
+from routes import bp
+from models import db, Pedido, DetallePedido
 import datetime
 
 @bp.route('/pedidos', methods=['POST'])
