@@ -1,0 +1,27 @@
+version: '3.9'
+
+services:
+  web:
+    build: ./backend
+    ports:
+      - "5000:5000"
+    depends_on:
+      - db
+    environment:
+      - DISPLAY=${DISPLAY}
+      - XAUTHORITY=/tmp/.Xauthority
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - ./backend:/app
+
+  db:
+    build: ./db
+    environment:
+      POSTGRES_DB: inventory_db
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: secret
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
