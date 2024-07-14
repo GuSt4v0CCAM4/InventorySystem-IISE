@@ -38,3 +38,19 @@ class DetallePedido(db.Model):
     producto_id = db.Column(db.Integer, db.ForeignKey('producto.id'), nullable=False)
     cantidad = db.Column(db.Integer, nullable=False)
     producto = db.relationship('Producto')
+
+class Devolucion(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    pedido_id = db.Column(db.Integer, db.ForeignKey('pedido.id'), nullable=False)
+    fecha_devolucion = db.Column(db.DateTime, default=datetime.datetime.utcnow)
+    estado_producto = db.Column(db.String(20), nullable=False)
+    observaciones = db.Column(db.String(500), nullable=True)
+    responsable = db.Column(db.String(50), nullable=False)
+
+class Notificacion(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    usuario_id = db.Column(db.Integer, db.ForeignKey('usuario.id'), nullable=False)
+    mensaje = db.Column(db.String(500), nullable=False)
+    fecha_notificacion = db.Column(db.DateTime, default=datetime.datetime.utcnow)
+    estado = db.Column(db.String(20), default='pendiente')
+    usuario = db.relationship('Usuario')

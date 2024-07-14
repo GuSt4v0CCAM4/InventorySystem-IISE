@@ -35,3 +35,20 @@ CREATE TABLE IF NOT EXISTS detalle_pedido (
     producto_id INTEGER REFERENCES productos(id),
     cantidad INTEGER NOT NULL
 );
+
+CREATE TABLE IF NOT EXISTS devoluciones (
+    id SERIAL PRIMARY KEY,
+    pedido_id INTEGER REFERENCES pedidos(id) ON DELETE CASCADE,
+    fecha_devolucion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    estado_producto VARCHAR(20) NOT NULL,
+    observaciones VARCHAR(500),
+    responsable VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS notificaciones (
+    id SERIAL PRIMARY KEY,
+    usuario_id INTEGER REFERENCES usuarios(id) ON DELETE CASCADE,
+    mensaje VARCHAR(500) NOT NULL,
+    fecha_notificacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    estado VARCHAR(20) DEFAULT 'pendiente'
+);
