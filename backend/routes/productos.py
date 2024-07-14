@@ -69,3 +69,10 @@ def get_productos():
         'estado': producto.estado,
         'ubicacion': producto.ubicacion
     } for producto in productos])
+
+@bp.route('/productos/<int:id>', methods=['DELETE'])
+def delete_producto(id):
+    producto = Producto.query.get_or_404(id)
+    db.session.delete(producto)
+    db.session.commit()
+    return '', 204

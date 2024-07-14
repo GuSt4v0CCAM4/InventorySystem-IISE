@@ -51,3 +51,10 @@ def get_usuarios():
         'correo': usuario.correo,
         'telefono': usuario.telefono
     } for usuario in usuarios])
+
+@bp.route('/usuarios/<int:id>', methods=['DELETE'])
+def delete_usuario(id):
+    usuario = Usuario.query.get_or_404(id)
+    db.session.delete(usuario)
+    db.session.commit()
+    return '', 204
