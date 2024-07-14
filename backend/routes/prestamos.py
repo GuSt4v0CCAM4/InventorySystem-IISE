@@ -1,35 +1,34 @@
 from flask import request, jsonify
 from routes import bp
-from models import db, Pedido, DetallePedido, Usuario, Producto
+from models import Pedido, DetallePedido
 import datetime
-from sqlalchemy.exc import IntegrityError
+import traceback
+
+prestamos_temporales = []
 
 @bp.route('/prestamos', methods=['POST'])
 def add_prestamo():
     data = request.get_json()
     try:
-        nuevo_prestamo = Pedido(
-            cliente=data['cliente'],
-            fecha_pedido=datetime.datetime.strptime(data['fecha_pedido'], '%Y-%m-%d'),
-            detalles=data['detalles']
-        )
-        db.session.add(nuevo_prestamo)
-        db.session.commit()
+        print("Datos recibidos para el préstamo:", data)
+        fecha_pedido = datetime.datetime.strptime(data['fecha_pedido'], '%m/%d/%y').strftime('%Y-%m-%d')
+        nuevo_prestamo = {
+            'id': len(prestamos_temporales) + 1,
+            'cliente': data['cliente'],
+            'fecha_pedido': fecha_pedido,
+            'detalles': data['detalles'],
+            'productos': data['productos']
+        }
+        prestamos_temporales.append(nuevo_prestamo)
 
-        for item in data['productos']:
-            detalle = DetallePedido(
-                pedido_id=nuevo_prestamo.id,
-                producto_id=item['producto_id'],
-                cantidad=item['cantidad']
-            )
-            db.session.add(detalle)
+        print("Préstamo añadido con ID:", nuevo_prestamo['id'])
+        return jsonify(nuevo_prestamo['id']), 201
 
-        db.session.commit()
-        return jsonify(nuevo_prestamo.id), 201
-
-    except IntegrityError as e:
-        db.session.rollback()
-        return jsonify({"error": str(e)}), 400
     except Exception as e:
-        db.session.rollback()
+        print("Error general:", str(e))
+        traceback.print_exc()
         return jsonify({"error": str(e)}), 500
+
+@bp.route('/prestamos', methods=['GET'])
+def get_prestamos():
+    return jsonify(prestamos_temporales)

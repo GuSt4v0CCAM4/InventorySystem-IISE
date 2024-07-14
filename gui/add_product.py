@@ -5,15 +5,15 @@ import requests
 class AddProductWindow(tk.Toplevel):
     def __init__(self, parent):
         super().__init__(parent)
-        self.title("Add Product")
+        self.title("Agregar Producto")
         self.geometry("400x400")
         self.create_widgets()
 
     def create_widgets(self):
-        self.label = tk.Label(self, text="Add New Product", font=("Arial", 14))
+        self.label = tk.Label(self, text="Agregar Nuevo Producto", font=("Arial", 14))
         self.label.pack(pady=10)
 
-        self.fields = ["Codigo", "Nombre", "Descripcion", "Categoria", "Proveedor", "Precio", "Unidad", "Imagen", "Ubicacion"]
+        self.fields = ["Código", "Nombre", "Descripción", "Categoría", "Proveedor", "Precio", "Unidad", "Imagen", "Ubicación"]
         self.entries = {}
 
         for field in self.fields:
@@ -25,7 +25,7 @@ class AddProductWindow(tk.Toplevel):
             entry.pack(side=tk.LEFT)
             self.entries[field] = entry
 
-        self.add_button = tk.Button(self, text="Add", command=self.add_product)
+        self.add_button = tk.Button(self, text="Agregar", command=self.add_product)
         self.add_button.pack(pady=10)
 
     def add_product(self):
@@ -34,8 +34,26 @@ class AddProductWindow(tk.Toplevel):
 
         response = requests.post("http://localhost:5000/api/productos", json=product_data)
         if response.status_code == 201:
-            messagebox.showinfo("Success", "Product added successfully")
+            messagebox.showinfo("Éxito", "Producto agregado exitosamente")
             self.master.refresh_products()
             self.destroy()
         else:
-            messagebox.showerror("Error", "Failed to add product")
+            messagebox.showerror("Error", "Error al agregar el producto")
+
+# Código adicional para probar la ventana
+class MainApp(tk.Tk):
+    def __init__(self):
+        super().__init__()
+        self.title("Sistema de Inventario")
+        self.geometry("600x400")
+
+        self.add_product_button = tk.Button(self, text="Agregar Producto", command=self.open_add_product_window)
+        self.add_product_button.pack(pady=20)
+
+    def open_add_product_window(self):
+        AddProductWindow(self)
+
+    def refresh_products(self):
+        # Aquí puedes agregar la lógica para refrescar la lista de productos
+        pass
+

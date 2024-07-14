@@ -7,24 +7,24 @@ from gui.manage_returns import ManageReturns
 class InventoryApp(tk.Tk):
     def __init__(self):
         super().__init__()
-        self.title("Inventory System")
+        self.title("Sistema de Inventario")
         self.geometry("800x600")
         self.create_widgets()
 
     def create_widgets(self):
-        self.label = tk.Label(self, text="Inventory Management System", font=("Arial", 18))
+        self.label = tk.Label(self, text="Sistema de Gestión de Inventario", font=("Arial", 18))
         self.label.pack(pady=10)
 
-        self.manage_products_button = tk.Button(self, text="Manage Products", command=self.open_manage_products)
+        self.manage_products_button = tk.Button(self, text="Gestionar Productos", command=self.open_manage_products)
         self.manage_products_button.pack(pady=10)
 
-        self.manage_users_button = tk.Button(self, text="Manage Users", command=self.open_manage_users)
+        self.manage_users_button = tk.Button(self, text="Gestionar Usuarios", command=self.open_manage_users)
         self.manage_users_button.pack(pady=10)
 
-        self.manage_loans_button = tk.Button(self, text="Manage Loans", command=self.open_manage_loans)
+        self.manage_loans_button = tk.Button(self, text="Gestionar Préstamos", command=self.open_manage_loans)
         self.manage_loans_button.pack(pady=10)
 
-        self.manage_returns_button = tk.Button(self, text="Manage Returns", command=self.open_manage_returns)
+        self.manage_returns_button = tk.Button(self, text="Gestionar Devoluciones", command=self.open_manage_returns)
         self.manage_returns_button.pack(pady=10)
 
     def open_manage_products(self):
@@ -38,7 +38,3 @@ class InventoryApp(tk.Tk):
 
     def open_manage_returns(self):
         ManageReturns(self)
-
-if __name__ == "__main__":
-    app = InventoryApp()
-    app.mainloop()

@@ -7,3 +7,5 @@ import routes.productos
 import routes.usuarios
 import routes.pedidos
 import routes.reportes
+import routes.prestamos
+import routes.devoluciones

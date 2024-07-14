@@ -6,16 +6,16 @@ class UpdateProductWindow(tk.Toplevel):
     def __init__(self, parent, product_id):
         super().__init__(parent)
         self.product_id = product_id
-        self.title("Update Product")
+        self.title("Actualizar Producto")
         self.geometry("400x400")
         self.create_widgets()
         self.load_product_data()
 
     def create_widgets(self):
-        self.label = tk.Label(self, text="Update Product", font=("Arial", 14))
+        self.label = tk.Label(self, text="Actualizar Producto", font=("Arial", 14))
         self.label.pack(pady=10)
 
-        self.fields = ["Codigo", "Nombre", "Descripcion", "Categoria", "Proveedor", "Precio", "Unidad", "Imagen", "Ubicacion"]
+        self.fields = ["Código", "Nombre", "Descripción", "Categoría", "Proveedor", "Precio", "Unidad", "Imagen", "Ubicación"]
         self.entries = {}
 
         for field in self.fields:
@@ -27,7 +27,7 @@ class UpdateProductWindow(tk.Toplevel):
             entry.pack(side=tk.LEFT)
             self.entries[field] = entry
 
-        self.update_button = tk.Button(self, text="Update", command=self.update_product)
+        self.update_button = tk.Button(self, text="Actualizar", command=self.update_product)
         self.update_button.pack(pady=10)
 
     def load_product_data(self):
@@ -43,8 +43,10 @@ class UpdateProductWindow(tk.Toplevel):
 
         response = requests.put(f"http://localhost:5000/api/productos/{self.product_id}", json=product_data)
         if response.status_code == 200:
-            messagebox.showinfo("Success", "Product updated successfully")
+            messagebox.showinfo("Éxito", "Producto actualizado exitosamente")
             self.master.refresh_products()
             self.destroy()
         else:
-            messagebox.showerror("Error", "Failed to update product")
+            messagebox.showerror("Error", "No se pudo actualizar el producto")
+
+

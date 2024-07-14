@@ -1,35 +1,34 @@
 from flask import request, jsonify
 from routes import bp
-from models import db, Pedido, DetallePedido
 import datetime
-from sqlalchemy.exc import IntegrityError
+import traceback
+
+devoluciones_temporales = []
 
 @bp.route('/devoluciones', methods=['POST'])
 def add_devolucion():
     data = request.get_json()
     try:
-        pedido_id = data['pedido_id']
-        detalles = data['detalles']
+        print("Datos recibidos para la devolución:", data)
+        fecha_devolucion = datetime.datetime.strptime(data['fecha_devolucion'], '%m/%d/%y').strftime('%Y-%m-%d')
+        nueva_devolucion = {
+            'id': len(devoluciones_temporales) + 1,
+            'usuario': data['usuario'],
+            'producto_id': data['producto_id'],
+            'fecha_devolucion': fecha_devolucion,
+            'estado_producto': data['estado_producto'],
+            'observaciones': data['observaciones']
+        }
+        devoluciones_temporales.append(nueva_devolucion)
 
-        pedido = Pedido.query.get_or_404(pedido_id)
-        pedido.estado = 'devuelto'
-        pedido.detalles += f"\nDevolución: {detalles}"
+        print("Devolución añadida con ID:", nueva_devolucion['id'])
+        return jsonify(nueva_devolucion['id']), 201
 
-        for item in data['productos']:
-            detalle = DetallePedido.query.filter_by(pedido_id=pedido_id, producto_id=item['producto_id']).first()
-            if detalle:
-                detalle.cantidad -= item['cantidad']
-                if detalle.cantidad <= 0:
-                    db.session.delete(detalle)
-                else:
-                    db.session.add(detalle)
-
-        db.session.commit()
-        return jsonify({"message": "Devolución registrada exitosamente"}), 201
-
-    except IntegrityError as e:
-        db.session.rollback()
-        return jsonify({"error": str(e)}), 400
     except Exception as e:
-        db.session.rollback()
+        print("Error general:", str(e))
+        traceback.print_exc()
         return jsonify({"error": str(e)}), 500
+
+@bp.route('/devoluciones', methods=['GET'])
+def get_devoluciones():
+    return jsonify(devoluciones_temporales)
